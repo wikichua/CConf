@@ -7,7 +7,25 @@ class ConfFactory
 
 	public function pushToConfigAsArray(array $keys)
 	{
-		$this->configs = array_merge($this->configs,$keys);
+		$this->configs = array_merge_recursive($this->configs,$keys);
+	}
+
+	public function pushToConfigAsSingle($keys,$values)
+	{
+		if(strpos($keys,'.') > 0)
+		{
+			$keys = explode('.',$keys);
+			arsort($keys);
+			foreach($keys as $key){
+				if(!isset($temp_configs))
+					$temp_configs[$key] = $values;
+				else
+					$temp_configs[$key] = $temp_configs;
+			}
+			array_shift($temp_configs);
+			$this->pushToConfigAsArray($temp_configs);
+		}else{
+		}
 	}
 
 	public function getFromConfigs($key)
@@ -23,8 +41,9 @@ class ConfFactory
 			{	
 				$temp_configs = $temp_configs[$key];
 			}
-			else
+			else{
 				return null;
+			}
 		}
 		return $temp_configs;
 	}

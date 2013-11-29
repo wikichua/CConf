@@ -11,9 +11,9 @@ require_once 'ConfBuilder.php';
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers class::ableToSetAndGetData()
+     * @covers class::ableToSetAndGetDataAsArray()
      */
-    public function testAbleToSetAndGetData()
+    public function testAbleToSetAndGetDataAsArray()
     {
     	$example1 = [
     		'example1'=>[
@@ -34,6 +34,21 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers class::ableToSetAndGetDataAsSingle()
+     */
+    public function testAbleToSetAndGetDataAsSingle()
+    {
+
+        $Conf = new ConfBuilder;
+        $Conf->set('example2.test2','hello world');
+        $Conf->set('example2.test3',['hello','again']);
+        $result1 = $Conf->get('example2.test2');
+        $this->assertEquals('hello world', $result1);
+        $result1 = $Conf->get('example2.test3');
+        $this->assertCount(2, $result1);
+    }
+
+    /**
      * @covers class::ableToGetDataFromConfigDirectory()
      */
     public function testAbleToGetDataFromConfigDirectory()
@@ -45,5 +60,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     	$this->assertEquals('test1', $result);
     	$result1 = $Conf->get('example.test2');
     	$this->assertCount(2, $result1);
+
+        $Conf->set(['example'=>['test2'=>'hello world']]);
+        $result1 = $Conf->get('example.test2');
+        $this->assertEquals('hello world', $result1);
     }
 }

@@ -19,7 +19,9 @@ class ConfBuilder extends ConfFactory
 		if(is_array($key))
 		{
 			$this->pushToConfigAsArray($key);
-		}	
+		}else{
+			$this->pushToConfigAsSingle($key,$values);
+		}
 	}
 
 	public function get($key)
