@@ -14,23 +14,25 @@ class ConfFactory
 	{
 		if(strpos($keys,'.') > 0)
 		{
-			$keys = explode('.',$keys);
-			arsort($keys);
-			foreach($keys as $key){
-				if(!isset($temp_configs))
-					$temp_configs[$key] = $values;
-				else
-					$temp_configs[$key] = $temp_configs;
-			}
-			array_shift($temp_configs);
-			$this->pushToConfigAsArray($temp_configs);
-		}else{
+			$parts = array_filter(explode('.', $keys));
+			$result = [];
+		    $ref = &$result;
+		    foreach($parts as $p) {
+		        if(!isset($ref[$p])) {
+		            $ref[$p] = array();
+		        }
+		        $ref = &$ref[$p];
+		    }
+		    $ref = $values;
+
+			$this->pushToConfigAsArray($result);
 		}
 	}
 
 	public function getFromConfigs($key)
 	{
-		return $this->configs[$key];
+		$temp_config = @$this->configs[$key];
+		return $temp_config;
 	}
 
 	public function getFromConfigsNestedArray($keys,$temp_configs = '')
@@ -46,6 +48,7 @@ class ConfFactory
 			}
 		}
 		return $temp_configs;
+
 	}
 
 	public function getFromConfigFile($keys)
